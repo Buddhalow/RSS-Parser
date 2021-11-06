@@ -26,6 +26,7 @@ import com.prof.rssparser.Article;
 import com.prof.rssparser.Channel;
 import com.prof.rssparser.OnTaskCompleted;
 import com.prof.rssparser.Parser;
+import com.prof.rssparser.Season;
 
 import java.util.ArrayList;
 
@@ -74,7 +75,7 @@ public class MainViewModel extends ViewModel {
             //what to do in case of error
             @Override
             public void onError(@NonNull Exception e) {
-                setChannel(new Channel(null, null, null, null, null, null, new ArrayList<Article>()));
+                setChannel(new Channel(null, null, null, null, null, null, new ArrayList<Article>(), new ArrayList<Season>()));
                 e.printStackTrace();
                 snackbar.postValue("An error has occurred. Please try again");
             }
