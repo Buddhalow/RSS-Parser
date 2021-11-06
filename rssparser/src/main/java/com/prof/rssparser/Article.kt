@@ -35,10 +35,18 @@ data class Article(
         private var _categories: MutableList<String> = mutableListOf()
 ): Serializable {
 
+        private var _enclosures: MutableList<Enclosure> = mutableListOf()
+
+    val enclosures: MutableList<Enclosure>
+        get() = _enclosures
+
     val categories: MutableList<String>
         get() = _categories
 
     fun addCategory(category: String) {
         _categories.add(category)
+    }
+    fun addEnclosure(enclosure: Enclosure) {
+        _enclosures.add(enclosure)
     }
 }

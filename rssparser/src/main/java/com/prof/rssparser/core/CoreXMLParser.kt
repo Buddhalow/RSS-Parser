@@ -19,6 +19,7 @@ package com.prof.rssparser.core
 
 import com.prof.rssparser.Article
 import com.prof.rssparser.Channel
+import com.prof.rssparser.Enclosure
 import com.prof.rssparser.Image
 import com.prof.rssparser.utils.RSSKeywords
 import org.xmlpull.v1.XmlPullParser
@@ -144,21 +145,30 @@ internal object CoreXMLParser {
                         if (type != null && type.contains("image")) {
                             // If there are multiple elements, we take only the first
                             if (currentArticle.image == null) {
-                                currentArticle.image = xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
+                                currentArticle.image =
+                                    xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
                             }
                         } else if (type != null && type.contains("audio")) {
                             // If there are multiple elements, we take only the first
                             if (currentArticle.audio == null) {
-                                currentArticle.audio = xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
+                                currentArticle.audio =
+                                    xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
                             }
                         } else if (type != null && type.contains("video")) {
                             // If there are multiple elements, we take only the first
                             if (currentArticle.video == null) {
-                                currentArticle.video = xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
+                                currentArticle.video =
+                                    xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
                             }
                         }
+                        if (type != null) {
+                            val currentEnclosure = Enclosure()
+                            currentEnclosure.url =
+                                xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
+                            currentEnclosure.contentType = type
+                            currentArticle.enclosures.add(currentEnclosure)
+                        }
                     }
-
                 } else if (xmlPullParser.name.equals(RSSKeywords.RSS_ITEM_SOURCE, ignoreCase = true)) {
                     if (insideItem) {
                         val sourceUrl = xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_URL)
