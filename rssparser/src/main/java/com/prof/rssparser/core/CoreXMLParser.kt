@@ -17,10 +17,7 @@
 
 package com.prof.rssparser.core
 
-import com.prof.rssparser.Article
-import com.prof.rssparser.Channel
-import com.prof.rssparser.Enclosure
-import com.prof.rssparser.Image
+import com.prof.rssparser.*
 import com.prof.rssparser.utils.RSSKeywords
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
@@ -44,6 +41,8 @@ internal object CoreXMLParser {
         var channelUpdatePeriod: String? = null
         val articleList = mutableListOf<Article>()
         var currentArticle = Article()
+        var currentSeason : Season? = null
+        val seasonList = mutableListOf<Season>()
         // This image url is extracted from the content and the description of the rss item.
         // It's a fallback just in case there aren't any images in the enclosure tag.
         var imageUrlFromContent: String? = null
@@ -60,6 +59,7 @@ internal object CoreXMLParser {
         var insideItem = false
         var insideChannel = false
         var insideChannelImage = false
+        var insideSeason = false
 
         var eventType = xmlPullParser.eventType
 
@@ -132,6 +132,23 @@ internal object CoreXMLParser {
                 } else if (xmlPullParser.name.equals(RSSKeywords.RSS_ITEM_URL, ignoreCase = true)) {
                     if (insideChannelImage) {
                         channelImage?.url = xmlPullParser.nextText().trim()
+                    }
+
+                } else if (xmlPullParser.name.equals(RSSKeywords.RSS_ITEM_SEASON, ignoreCase = true)) {
+                    insideSeason = true;
+
+                    if (insideSeason) {
+                        val seasonName = xmlPullParser.getAttributeValue(null, RSSKeywords.RSS_ITEM_NAME)
+                        val seasonNumber : Int = xmlPullParser.getText()!!.toInt()
+                        currentSeason = seasonList.find {
+                            season -> season.number == seasonNumber
+                        }
+                        if (currentSeason == null) {
+                            currentSeason = Season()
+                            seasonList.add(currentSeason)
+                        }
+                        currentSeason.name = seasonName
+                        currentSeason.number = seasonNumber
                     }
 
                 } else if (xmlPullParser.name.equals(RSSKeywords.RSS_ITEM_ITUNES_IMAGE, ignoreCase = true)) {
@@ -254,14 +271,15 @@ internal object CoreXMLParser {
         }
 
         return Channel(
-                title = channelTitle,
-                link = channelLink,
-                description = channelDescription,
-                image = channelImage,
-                lastBuildDate = channelLastBuildDate,
-                updatePeriod = channelUpdatePeriod,
-                articles = articleList
-        )
+            title = channelTitle,
+            link = channelLink,
+            description = channelDescription,
+            image = channelImage,
+            lastBuildDate = channelLastBuildDate,
+            updatePeriod = channelUpdatePeriod,
+            articles = articleList,
+            seasons = seasonList
+     )
     }
 
     /**

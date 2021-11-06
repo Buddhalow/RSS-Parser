@@ -19,6 +19,8 @@ package com.prof.rssparser.utils
 
 internal object RSSKeywords {
 
+    const val RSS_ITEM_NAME = "name"
+
     // channel
     const val RSS_CHANNEL = "channel"
     const val RSS_CHANNEL_IMAGE = "image"
@@ -41,6 +43,7 @@ internal object RSSKeywords {
     const val RSS_ITEM_URL = "url"
     const val RSS_ITEM_TYPE = "type"
     const val RSS_ITEM_GUID = "guid"
+    const val RSS_ITEM_SEASON = "podcast:season"
     const val RSS_ITEM_SOURCE = "source"
     const val RSS_ITEM_ITUNES_IMAGE = "itunes:image"
     const val RSS_ITEM_HREF = "href"

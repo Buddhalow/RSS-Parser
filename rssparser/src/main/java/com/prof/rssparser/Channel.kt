@@ -9,5 +9,6 @@ data class Channel(
         val image: Image? = null,
         val lastBuildDate: String? = null,
         val updatePeriod: String? = null,
-        val articles: MutableList<Article> = mutableListOf()
+        val articles: MutableList<Article> = mutableListOf(),
+        val seasons: MutableList<Season> = mutableListOf()
 ): Serializable
